@@ -1,0 +1,53 @@
+#lang racket
+
+(define (accumulate op init seq)
+  (if (null? seq)
+      init
+      (op (car seq) (accumulate op init (cdr seq)))))
+
+(define (filter pred seq)
+  (accumulate (lambda (x y) (append (if (pred x) (list x) '()) y)) '() seq)
+  )
+
+(define (enumerate f n)
+  (define (iter i res)
+    (if (< i f)
+        res
+        (iter (- i 1) (cons i res)))
+    )
+  (iter n '())
+  )
+
+(define (get-variants seq)
+  (if (null? seq) 
+      (list (list))
+      (apply append 
+             (map (lambda (elem) 
+                    (map (lambda (y) (cons elem y)) (get-variants (filter (lambda (r) (not (= r elem))) seq)))) seq))
+         )
+  )
+
+(define (draw seq)
+  (define max (length seq))
+  (define (draw-line l)
+    (define (iter-draw-line i n)
+      (cond ((= i max) (newline))
+            ((= i n) (display "1") (iter-draw-line (+ i 1) n))
+            (else (display "0") (iter-draw-line (+ i 1) n))
+            )
+      )
+    (iter-draw-line 0 l)
+    )
+  (define (iter s)
+    (cond ((null? s) (newline))
+          (else (draw-line (car s)) (iter (cdr s)))
+          )
+    )
+  (iter seq)
+  )
+
+(define enum (enumerate 1 8))
+
+
+
+(map draw (get-variants enum))
