@@ -28,6 +28,7 @@
   )
 
 (define (draw seq)
+  (newline)
   (define max (length seq))
   (define (draw-line l)
     (define (iter-draw-line i n)
@@ -58,11 +59,11 @@
   (iter seq '())
   )
 
-(define (log-false s)
-  (display s) (display " - #f") (newline)
+(define (log-false s r) 
+  (display s) (display " - ") (display r) (newline)
   )
 
 (define enum (enumerate 0 7))
 
-(map (lambda (seq) (if (check seq) (draw seq) (log-false seq))) (get-variants enum))
+(map (lambda (seq) (let ((r (check seq))) (log-false seq r) (if r (draw seq) '()))) (get-variants enum))
 
