@@ -46,23 +46,8 @@
   (iter seq)
   )
 
-(define (check seq)
-  (define (safe? c p)
-    (if (null? p) true (if (or (= (car p) (+ c (length p))) (= (car p) (- c (length p)))) false (safe? c (cdr p))))
-    )
-  (define (iter s p)
-    (cond ((null? s) true)
-          (else (if (safe? (car s) p) (iter (cdr s) (append p (list (car s)))) false))
-         )
-    )
-  (iter seq '())
-  )
+(define enum (enumerate 1 8))
 
-(define (log-false s)
-  (display s) (display " - #f") (newline)
-  )
 
-(define enum (enumerate 0 7))
 
-(map (lambda (seq) (if (check seq) (draw seq) (log-false seq))) (get-variants enum))
-
+(map draw (get-variants enum))
