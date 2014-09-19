@@ -1,23 +1,5 @@
 #lang racket
 
-(define (accumulate op init seq)
-  (if (null? seq)
-      init
-      (op (car seq) (accumulate op init (cdr seq)))))
-
-(define (filter pred seq)
-  (accumulate (lambda (x y) (append (if (pred x) (list x) '()) y)) '() seq)
-  )
-
-(define (enumerate f n)
-  (define (iter i res)
-    (if (< i f)
-        res
-        (iter (- i 1) (cons i res)))
-    )
-  (iter n '())
-  )
-
 (define (get-variants seq)
   (if (null? seq) 
       (list (list))
@@ -47,7 +29,7 @@
   (iter seq)
   )
 
-(define (check seq)
+(define (check? seq)
   (define (safe? c p)
     (if (null? p) true (if (or (= (car p) (+ c (length p))) (= (car p) (- c (length p)))) false (safe? c (cdr p))))
     )
@@ -63,7 +45,7 @@
   (display s) (display " - ") (display r) (newline)
   )
 
-(define enum (enumerate 0 7))
+(define enum (list 0 1 2 3 4 5 6 7))
 
-(map (lambda (seq) (let ((r (check seq))) (log-false seq r) (if r (draw seq) '()))) (get-variants enum))
+(map (lambda (seq) (let ((r (check? seq))) (log-false seq r) (if r (draw seq) (newline)))) (get-variants enum))
 
